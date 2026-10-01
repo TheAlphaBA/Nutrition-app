@@ -30,6 +30,7 @@ from app.services.llm_service import (
     get_llm_response,
     format_conversation_history,
 )
+from app.services.guardrails import check_guardrails
 
 router = APIRouter(prefix="/api", tags=["chat"])
 
@@ -162,10 +163,34 @@ async def chat(
     db.add(user_msg)
     db.flush()
 
-    # 3. Format conversation history for context
+    # 3. Code-Enforced Guardrail Pre-filter Check
+    gr_result = check_guardrails(user_query)
+    if gr_result.blocked:
+        refusal_msg_id = f"msg-{uuid.uuid4().hex[:12]}"
+        refusal_msg = Message(
+            id=refusal_msg_id,
+            conversation_id=conv.id,
+            role="assistant",
+            content=gr_result.refusal_message or "Request refused by guardrail.",
+            created_at=datetime.utcnow(),
+        )
+        db.add(refusal_msg)
+        conv.updated_at = datetime.utcnow()
+        db.commit()
+
+        return ChatResponse(
+            conversation_id=conv.id,
+            message_id=refusal_msg.id,
+            answer=gr_result.refusal_message or "Request refused by guardrail.",
+            claims=[],
+            guardrail_triggered=True,
+            guardrail_reason=gr_result.reason,
+        )
+
+    # 4. Format conversation history for context
     history = format_conversation_history(conv.messages[:-1])
 
-    # 4. Generate structured LLM response
+    # 5. Generate structured LLM response
     llm_output = await get_llm_response(history=history, user_message=user_query)
 
     answer_text = llm_output.get("answer", "")
