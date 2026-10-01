@@ -9,7 +9,9 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    # OpenAI
+    # LLM Settings
+    llm_provider: str = "gemini"  # "gemini" or "openai"
+    gemini_api_key: str = ""
     openai_api_key: str = ""
 
     # Database
