@@ -1,69 +1,149 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Claim,
+  ConversationSummary,
+  Message,
+  checkBackendHealth,
+  fetchConversation,
+  fetchConversations,
+  sendChatMessage,
+} from "../lib/api";
+import { Header } from "../components/Header";
+import { Sidebar } from "../components/Sidebar";
+import { ChatWindow } from "../components/ChatWindow";
+import { SourcesPanel } from "../components/SourcesPanel";
 
 export default function Home() {
+  const [conversations, setConversations] = useState<ConversationSummary[]>([]);
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSourcesOpen, setIsSourcesOpen] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [backendOnline, setBackendOnline] = useState<boolean>(true);
+
+  // Load conversations on mount
+  const loadConversations = useCallback(async () => {
+    const list = await fetchConversations();
+    setConversations(list);
+  }, []);
+
+  useEffect(() => {
+    loadConversations();
+    checkBackendHealth().then((res) => {
+      setBackendOnline(res.status === "ok");
+    });
+  }, [loadConversations]);
+
+  // Load selected conversation
+  const handleSelectConversation = async (id: string) => {
+    setActiveConversationId(id);
+    const detail = await fetchConversation(id);
+    if (detail) {
+      setMessages(detail.messages);
+    }
+  };
+
+  // Start new chat
+  const handleNewChat = () => {
+    setActiveConversationId(null);
+    setMessages([]);
+  };
+
+  // Send message
+  const handleSendMessage = async (userText: string) => {
+    if (!userText.trim() || isLoading) return;
+
+    // Optimistically add user message
+    const tempUserMsg: Message = {
+      id: `temp-${Date.now()}`,
+      role: "user",
+      content: userText,
+      created_at: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, tempUserMsg]);
+    setIsLoading(true);
+
+    try {
+      const response = await sendChatMessage(userText, activeConversationId);
+
+      const botMsg: Message = {
+        id: response.message_id,
+        role: "assistant",
+        content: response.answer,
+        created_at: new Date().toISOString(),
+        claims: response.claims,
+        guardrail_triggered: response.guardrail_triggered,
+        guardrail_reason: response.guardrail_reason,
+      };
+
+      setMessages((prev) => [...prev, botMsg]);
+
+      if (!activeConversationId && response.conversation_id) {
+        setActiveConversationId(response.conversation_id);
+      }
+
+      // Refresh sidebar conversation list
+      loadConversations();
+    } catch (err: unknown) {
+      const errorText = err instanceof Error ? err.message : "Failed to connect to assistant.";
+      const errorMsg: Message = {
+        id: `err-${Date.now()}`,
+        role: "assistant",
+        content: `⚠️ **Connection Error**: ${errorText}\n\nPlease verify that the FastAPI backend server is running on \`http://localhost:8000\`.`,
+        created_at: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Extract all claims from current conversation for Sources Panel
+  const allCurrentClaims: Claim[] = messages.reduce<Claim[]>((acc, msg) => {
+    if (msg.claims && msg.claims.length > 0) {
+      return [...acc, ...msg.claims];
+    }
+    return acc;
+  }, []);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="app-container">
+      <Sidebar
+        conversations={conversations}
+        activeConversationId={activeConversationId}
+        onSelectConversation={handleSelectConversation}
+        onNewChat={handleNewChat}
+        isOpen={isSidebarOpen}
+      />
+
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
+        <Header
+          sourcesCount={allCurrentClaims.length}
+          isSourcesOpen={isSourcesOpen}
+          onToggleSources={() => setIsSourcesOpen((prev) => !prev)}
+          isSidebarOpen={isSidebarOpen}
+          onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+          backendOnline={backendOnline}
         />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+
+        <div style={{ flex: 1, display: "flex", height: "calc(100% - 64px)", overflow: "hidden" }}>
+          <ChatWindow
+            messages={messages}
+            isLoading={isLoading}
+            onSendMessage={handleSendMessage}
+            onInspectClaim={() => setIsSourcesOpen(true)}
+          />
+
+          <SourcesPanel
+            claims={allCurrentClaims}
+            isOpen={isSourcesOpen}
+            onClose={() => setIsSourcesOpen(false)}
+          />
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }
