@@ -1,1 +1,7 @@
-# Empty init files for sub-packages
+"""
+Prompts package exports.
+"""
+
+from app.prompts.system_prompt import SYSTEM_PROMPT
+
+__all__ = ["SYSTEM_PROMPT"]
