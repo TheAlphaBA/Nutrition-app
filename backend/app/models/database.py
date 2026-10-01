@@ -151,10 +151,76 @@ def get_session_factory(engine=None):
     return _SessionFactory
 
 
+def _auto_seed_if_empty(session: Session) -> None:
+    """Auto-load seed conversations if database is empty on deployment."""
+    import json
+    from pathlib import Path
+
+    candidate_paths = [
+        Path(__file__).resolve().parent.parent.parent / "data" / "seed_conversations.json",
+        Path(__file__).resolve().parent.parent.parent.parent / "data" / "seed_conversations.json",
+        Path("/app/data/seed_conversations.json"),
+    ]
+
+    seed_file = None
+    for p in candidate_paths:
+        if p.exists():
+            seed_file = p
+            break
+
+    if not seed_file:
+        return
+
+    try:
+        with open(seed_file, "r") as f:
+            data = json.load(f)
+
+        for conv_data in data.get("conversations", []):
+            conv = Conversation(
+                id=conv_data["id"],
+                created_at=datetime.fromisoformat(conv_data["created_at"].replace("Z", "+00:00")),
+                updated_at=datetime.fromisoformat(conv_data["updated_at"].replace("Z", "+00:00")),
+            )
+            session.add(conv)
+
+            for msg_data in conv_data.get("messages", []):
+                msg = Message(
+                    id=msg_data["id"],
+                    conversation_id=conv.id,
+                    role=msg_data["role"],
+                    content=msg_data["content"],
+                    created_at=datetime.fromisoformat(msg_data["created_at"].replace("Z", "+00:00")),
+                )
+                session.add(msg)
+
+                for claim_data in msg_data.get("claims", []):
+                    claim = Claim(
+                        id=claim_data["id"],
+                        message_id=msg.id,
+                        claim_text=claim_data["text"],
+                        source=None,
+                    )
+                    session.add(claim)
+
+        session.commit()
+    except Exception:
+        session.rollback()
+
+
 def init_db(engine=None) -> None:
-    """Initialize all tables defined in Base."""
+    """Initialize all tables defined in Base and auto-seed if empty."""
     target_engine = engine or get_engine()
     Base.metadata.create_all(bind=target_engine)
+
+    SessionFactory = get_session_factory(target_engine)
+    session = SessionFactory()
+    try:
+        if session.query(Conversation).count() == 0:
+            _auto_seed_if_empty(session)
+    except Exception:
+        pass
+    finally:
+        session.close()
 
 
 def get_session() -> Generator[Session, None, None]:

@@ -43,7 +43,16 @@ export interface ChatResponse {
   guardrail_reason: string | null;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+function getApiBase(): string {
+  let url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+  url = url.trim().replace(/\/+$/, "");
+  if (!url.endsWith("/api")) {
+    url = `${url}/api`;
+  }
+  return url;
+}
+
+const API_BASE = getApiBase();
 
 export async function fetchConversations(): Promise<ConversationSummary[]> {
   try {

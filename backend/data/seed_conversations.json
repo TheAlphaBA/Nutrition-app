@@ -1,0 +1,614 @@
+{
+  "conversations": [
+    {
+      "id": "conv-001-nutrient-basics",
+      "created_at": "2026-10-02T10:00:00Z",
+      "updated_at": "2026-10-02T10:02:30Z",
+      "messages": [
+        {
+          "id": "msg-001-01",
+          "role": "user",
+          "content": "What are the health benefits of spinach?",
+          "created_at": "2026-10-02T10:00:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-001-02",
+          "role": "assistant",
+          "content": "Spinach is a nutrient-dense leafy green vegetable that offers a wide range of health benefits. It is particularly rich in vitamins A, C, and K, as well as several important minerals.\n\nSpinach is an excellent source of iron, which is essential for healthy red blood cell production and oxygen transport throughout the body. It also provides significant amounts of folate, which is crucial for cell division and DNA synthesis. The high vitamin K content supports bone health and proper blood clotting.\n\nAdditionally, spinach contains antioxidants such as lutein and zeaxanthin, which are beneficial for eye health and may help protect against age-related macular degeneration.",
+          "created_at": "2026-10-02T10:00:15Z",
+          "claims": [
+            {
+              "id": "claim-001-01",
+              "text": "Spinach is rich in vitamins A, C, and K.",
+              "source": null
+            },
+            {
+              "id": "claim-001-02",
+              "text": "Spinach is an excellent source of iron, providing about 2.7 mg per 100g serving.",
+              "source": null
+            },
+            {
+              "id": "claim-001-03",
+              "text": "Spinach provides significant amounts of folate, which is crucial for cell division and DNA synthesis.",
+              "source": null
+            },
+            {
+              "id": "claim-001-04",
+              "text": "Vitamin K in spinach supports bone health and proper blood clotting.",
+              "source": null
+            },
+            {
+              "id": "claim-001-05",
+              "text": "Spinach contains antioxidants lutein and zeaxanthin, which are beneficial for eye health.",
+              "source": null
+            }
+          ]
+        },
+        {
+          "id": "msg-001-03",
+          "role": "user",
+          "content": "How much spinach should I eat to get enough iron?",
+          "created_at": "2026-10-02T10:01:30Z",
+          "claims": []
+        },
+        {
+          "id": "msg-001-04",
+          "role": "assistant",
+          "content": "Raw spinach contains approximately 2.7 mg of iron per 100 grams. The recommended daily allowance (RDA) for iron varies by age and sex — adult men need about 8 mg per day, while adult women of childbearing age need about 18 mg per day.\n\nIt's important to note that spinach contains non-heme iron, which is less readily absorbed by the body than the heme iron found in animal products. Absorption of non-heme iron can be enhanced by consuming it alongside vitamin C-rich foods, such as citrus fruits or bell peppers.\n\nCooking spinach can actually increase the bioavailability of its iron content by breaking down oxalic acid, which otherwise inhibits iron absorption.",
+          "created_at": "2026-10-02T10:01:45Z",
+          "claims": [
+            {
+              "id": "claim-001-06",
+              "text": "Raw spinach contains approximately 2.7 mg of iron per 100 grams.",
+              "source": null
+            },
+            {
+              "id": "claim-001-07",
+              "text": "The RDA for iron is about 8 mg per day for adult men.",
+              "source": null
+            },
+            {
+              "id": "claim-001-08",
+              "text": "The RDA for iron is about 18 mg per day for adult women of childbearing age.",
+              "source": null
+            },
+            {
+              "id": "claim-001-09",
+              "text": "Spinach contains non-heme iron, which is less readily absorbed than heme iron from animal products.",
+              "source": null
+            },
+            {
+              "id": "claim-001-10",
+              "text": "Vitamin C-rich foods enhance non-heme iron absorption.",
+              "source": null
+            },
+            {
+              "id": "claim-001-11",
+              "text": "Cooking spinach increases iron bioavailability by breaking down oxalic acid.",
+              "source": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conv-002-food-safety",
+      "created_at": "2026-10-02T11:00:00Z",
+      "updated_at": "2026-10-02T11:03:00Z",
+      "messages": [
+        {
+          "id": "msg-002-01",
+          "role": "user",
+          "content": "How long can cooked rice be safely stored in the fridge?",
+          "created_at": "2026-10-02T11:00:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-002-02",
+          "role": "assistant",
+          "content": "Cooked rice can be safely stored in the refrigerator for up to 4 to 6 days when properly handled. The key to safe storage is cooling the rice quickly — ideally within one hour of cooking — and storing it in airtight containers.\n\nRice is particularly susceptible to Bacillus cereus, a bacterium that can form heat-resistant spores. If cooked rice is left at room temperature for more than 2 hours, these spores can germinate and produce toxins that cause food poisoning. The toxins produced are not destroyed by reheating.\n\nWhen reheating stored rice, ensure it reaches an internal temperature of at least 74°C (165°F) throughout. Rice can also be frozen for up to 6 months for longer storage.",
+          "created_at": "2026-10-02T11:00:18Z",
+          "claims": [
+            {
+              "id": "claim-002-01",
+              "text": "Cooked rice can be safely stored in the refrigerator for up to 4 to 6 days.",
+              "source": null
+            },
+            {
+              "id": "claim-002-02",
+              "text": "Cooked rice should be cooled within one hour of cooking for safe storage.",
+              "source": null
+            },
+            {
+              "id": "claim-002-03",
+              "text": "Rice is susceptible to Bacillus cereus, which can form heat-resistant spores.",
+              "source": null
+            },
+            {
+              "id": "claim-002-04",
+              "text": "Cooked rice left at room temperature for more than 2 hours risks bacterial toxin production.",
+              "source": null
+            },
+            {
+              "id": "claim-002-05",
+              "text": "Bacillus cereus toxins are not destroyed by reheating.",
+              "source": null
+            },
+            {
+              "id": "claim-002-06",
+              "text": "Reheated rice should reach an internal temperature of at least 74°C (165°F).",
+              "source": null
+            },
+            {
+              "id": "claim-002-07",
+              "text": "Cooked rice can be frozen for up to 6 months.",
+              "source": null
+            }
+          ]
+        },
+        {
+          "id": "msg-002-03",
+          "role": "user",
+          "content": "At what temperature should chicken be cooked to be safe?",
+          "created_at": "2026-10-02T11:02:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-002-04",
+          "role": "assistant",
+          "content": "Chicken should be cooked to a minimum internal temperature of 74°C (165°F) throughout all parts of the meat, including the thickest portions. This temperature is necessary to kill harmful bacteria such as Salmonella and Campylobacter, which are commonly found in raw poultry.\n\nUse a food thermometer to check the temperature at the thickest part of the chicken, avoiding contact with bone, as bone conducts heat differently and may give an inaccurate reading.\n\nUnlike beef or pork, chicken does not have a safe \"medium-rare\" option — it must always be fully cooked. The juices should run clear, and there should be no pink meat visible near the bone.",
+          "created_at": "2026-10-02T11:02:12Z",
+          "claims": [
+            {
+              "id": "claim-002-08",
+              "text": "Chicken should be cooked to a minimum internal temperature of 74°C (165°F).",
+              "source": null
+            },
+            {
+              "id": "claim-002-09",
+              "text": "Cooking to 165°F kills Salmonella and Campylobacter commonly found in raw poultry.",
+              "source": null
+            },
+            {
+              "id": "claim-002-10",
+              "text": "Temperature should be checked at the thickest part of the chicken, avoiding bone.",
+              "source": null
+            },
+            {
+              "id": "claim-002-11",
+              "text": "Chicken does not have a safe medium-rare option and must always be fully cooked.",
+              "source": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conv-003-cooking-methods",
+      "created_at": "2026-10-02T12:00:00Z",
+      "updated_at": "2026-10-02T12:04:00Z",
+      "messages": [
+        {
+          "id": "msg-003-01",
+          "role": "user",
+          "content": "Does boiling vegetables destroy their vitamins?",
+          "created_at": "2026-10-02T12:00:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-003-02",
+          "role": "assistant",
+          "content": "Boiling can reduce the vitamin content of vegetables, but the extent depends on the specific vitamin and the duration of cooking. Water-soluble vitamins — particularly vitamin C and B vitamins — are most susceptible to loss during boiling because they leach into the cooking water.\n\nStudies suggest that boiling can reduce vitamin C content by 25% to 50% depending on the vegetable and cooking time. However, fat-soluble vitamins (A, D, E, K) and minerals are more resistant to heat and water loss.\n\nTo minimise nutrient loss, consider steaming or microwaving vegetables instead of boiling, using minimal water, and keeping cooking times short. If you do boil, using the cooking water in soups or sauces can help recapture some of the lost nutrients.",
+          "created_at": "2026-10-02T12:00:20Z",
+          "claims": [
+            {
+              "id": "claim-003-01",
+              "text": "Water-soluble vitamins (vitamin C and B vitamins) are most susceptible to loss during boiling.",
+              "source": null
+            },
+            {
+              "id": "claim-003-02",
+              "text": "Boiling can reduce vitamin C content by 25% to 50%.",
+              "source": null
+            },
+            {
+              "id": "claim-003-03",
+              "text": "Fat-soluble vitamins (A, D, E, K) are more resistant to heat and water loss.",
+              "source": null
+            },
+            {
+              "id": "claim-003-04",
+              "text": "Steaming or microwaving preserves more nutrients than boiling.",
+              "source": null
+            },
+            {
+              "id": "claim-003-05",
+              "text": "Using cooking water in soups or sauces can recapture some lost nutrients.",
+              "source": null
+            }
+          ]
+        },
+        {
+          "id": "msg-003-03",
+          "role": "user",
+          "content": "Does microwaving food reduce its nutritional value?",
+          "created_at": "2026-10-02T12:02:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-003-04",
+          "role": "assistant",
+          "content": "Microwaving is actually one of the better cooking methods for preserving nutrients in food. Because microwaving cooks food quickly and uses little to no water, it minimises the time and conditions that lead to nutrient breakdown.\n\nAll cooking methods cause some nutrient loss, primarily of heat-sensitive and water-soluble vitamins like vitamin C and some B vitamins. However, because microwaving has shorter cooking times compared to boiling, baking, or frying, the overall nutrient retention is generally higher.\n\nOne study found that microwaved broccoli retained 97% of its flavonoids, compared to boiling which retained only 66%. The key factors for nutrient preservation in any cooking method are temperature, cooking duration, and the amount of water used.",
+          "created_at": "2026-10-02T12:02:14Z",
+          "claims": [
+            {
+              "id": "claim-003-06",
+              "text": "Microwaving is one of the better cooking methods for preserving nutrients.",
+              "source": null
+            },
+            {
+              "id": "claim-003-07",
+              "text": "Microwaving cooks food quickly and uses little to no water, minimising nutrient breakdown.",
+              "source": null
+            },
+            {
+              "id": "claim-003-08",
+              "text": "All cooking methods cause some loss of heat-sensitive and water-soluble vitamins.",
+              "source": null
+            },
+            {
+              "id": "claim-003-09",
+              "text": "Microwaved broccoli retained 97% of its flavonoids, compared to 66% when boiled.",
+              "source": null
+            },
+            {
+              "id": "claim-003-10",
+              "text": "Key factors for nutrient preservation are temperature, cooking duration, and amount of water used.",
+              "source": null
+            }
+          ]
+        },
+        {
+          "id": "msg-003-05",
+          "role": "user",
+          "content": "Is it safe to eat medium-rare steak?",
+          "created_at": "2026-10-02T12:03:30Z",
+          "claims": []
+        },
+        {
+          "id": "msg-003-06",
+          "role": "assistant",
+          "content": "Yes, eating medium-rare steak is generally considered safe for whole cuts of beef. This is because harmful bacteria like E. coli and Salmonella are typically found only on the surface of whole muscle cuts, not inside the meat. When you sear the outside of a steak, the surface reaches temperatures high enough to kill these pathogens.\n\nA medium-rare steak has an internal temperature of approximately 57°C (135°F). While this is below the 74°C (165°F) threshold recommended for ground meats and poultry, it is acceptable for whole cuts because the interior has not been exposed to surface contamination.\n\nHowever, this does NOT apply to mechanically tenderised or blade-tenderised steaks, where bacteria may have been pushed into the interior. Ground beef (burgers) should always be cooked to 71°C (160°F) minimum because the grinding process distributes surface bacteria throughout the meat.",
+          "created_at": "2026-10-02T12:03:48Z",
+          "claims": [
+            {
+              "id": "claim-003-11",
+              "text": "Medium-rare steak is generally considered safe for whole cuts of beef.",
+              "source": null
+            },
+            {
+              "id": "claim-003-12",
+              "text": "Harmful bacteria like E. coli and Salmonella are typically found only on the surface of whole muscle cuts.",
+              "source": null
+            },
+            {
+              "id": "claim-003-13",
+              "text": "A medium-rare steak has an internal temperature of approximately 57°C (135°F).",
+              "source": null
+            },
+            {
+              "id": "claim-003-14",
+              "text": "Mechanically tenderised steaks may have bacteria pushed into the interior and should be cooked to higher temperatures.",
+              "source": null
+            },
+            {
+              "id": "claim-003-15",
+              "text": "Ground beef should always be cooked to at least 71°C (160°F).",
+              "source": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conv-004-guardrail-demo",
+      "created_at": "2026-10-02T13:00:00Z",
+      "updated_at": "2026-10-02T13:05:00Z",
+      "messages": [
+        {
+          "id": "msg-004-01",
+          "role": "user",
+          "content": "How many calories should I eat to lose weight?",
+          "created_at": "2026-10-02T13:00:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-004-02",
+          "role": "assistant",
+          "content": "I'm unable to provide specific calorie or weight targets. These depend on individual factors that require assessment by a qualified healthcare professional or registered dietitian.",
+          "created_at": "2026-10-02T13:00:01Z",
+          "claims": [],
+          "guardrail_triggered": true,
+          "guardrail_reason": "calorie_weight_target"
+        },
+        {
+          "id": "msg-004-03",
+          "role": "user",
+          "content": "What is the ideal weight for a 5'8 male?",
+          "created_at": "2026-10-02T13:01:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-004-04",
+          "role": "assistant",
+          "content": "I'm unable to recommend what a person should weigh. Healthy weight varies significantly based on individual factors. Please consult a healthcare provider for personalised guidance.",
+          "created_at": "2026-10-02T13:01:01Z",
+          "claims": [],
+          "guardrail_triggered": true,
+          "guardrail_reason": "body_weight_recommendation"
+        },
+        {
+          "id": "msg-004-05",
+          "role": "user",
+          "content": "What supplement should I take for my iron deficiency?",
+          "created_at": "2026-10-02T13:02:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-004-06",
+          "role": "assistant",
+          "content": "I'm unable to provide medical advice, including recommendations about medications, supplements for specific conditions, or treatment plans. Please consult a qualified healthcare professional.",
+          "created_at": "2026-10-02T13:02:01Z",
+          "claims": [],
+          "guardrail_triggered": true,
+          "guardrail_reason": "medical_advice"
+        },
+        {
+          "id": "msg-004-07",
+          "role": "user",
+          "content": "Okay, what foods are naturally high in iron then?",
+          "created_at": "2026-10-02T13:03:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-004-08",
+          "role": "assistant",
+          "content": "There are many foods naturally rich in iron, which can be divided into two categories based on the type of iron they contain.\n\nHeme iron, which is more easily absorbed by the body, is found in animal-based foods such as red meat (beef and lamb), poultry (especially dark meat), organ meats (liver), and shellfish (oysters, clams, mussels). A 100g serving of beef liver contains approximately 6.5 mg of iron.\n\nNon-heme iron is found in plant-based foods including legumes (lentils, chickpeas, kidney beans), dark leafy greens (spinach, kale), tofu, fortified cereals, pumpkin seeds, and quinoa. One cup of cooked lentils provides about 6.6 mg of iron.\n\nTo improve absorption of non-heme iron, pair these foods with vitamin C sources like citrus fruits, tomatoes, or bell peppers. Avoid consuming iron-rich foods alongside calcium-rich foods, tea, or coffee, as these can inhibit absorption.",
+          "created_at": "2026-10-02T13:03:18Z",
+          "claims": [
+            {
+              "id": "claim-004-01",
+              "text": "Heme iron is more easily absorbed by the body than non-heme iron.",
+              "source": null
+            },
+            {
+              "id": "claim-004-02",
+              "text": "Red meat, poultry, organ meats, and shellfish are sources of heme iron.",
+              "source": null
+            },
+            {
+              "id": "claim-004-03",
+              "text": "A 100g serving of beef liver contains approximately 6.5 mg of iron.",
+              "source": null
+            },
+            {
+              "id": "claim-004-04",
+              "text": "Legumes, dark leafy greens, tofu, fortified cereals, pumpkin seeds, and quinoa contain non-heme iron.",
+              "source": null
+            },
+            {
+              "id": "claim-004-05",
+              "text": "One cup of cooked lentils provides about 6.6 mg of iron.",
+              "source": null
+            },
+            {
+              "id": "claim-004-06",
+              "text": "Vitamin C improves non-heme iron absorption.",
+              "source": null
+            },
+            {
+              "id": "claim-004-07",
+              "text": "Calcium, tea, and coffee can inhibit iron absorption.",
+              "source": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conv-005-vitamins-minerals",
+      "created_at": "2026-10-02T14:00:00Z",
+      "updated_at": "2026-10-02T14:03:00Z",
+      "messages": [
+        {
+          "id": "msg-005-01",
+          "role": "user",
+          "content": "How much vitamin C does an adult need daily?",
+          "created_at": "2026-10-02T14:00:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-005-02",
+          "role": "assistant",
+          "content": "The recommended daily allowance (RDA) for vitamin C varies by age, sex, and life stage. For most adults, the general recommendations are as follows:\n\nAdult men (19+ years) need approximately 90 mg per day, while adult women (19+ years) need about 75 mg per day. Pregnant women require 85 mg per day, and breastfeeding women need 120 mg per day.\n\nSmokers need an additional 35 mg per day beyond the standard RDA because smoking increases oxidative stress and depletes vitamin C more rapidly. The tolerable upper intake level (UL) for adults is 2,000 mg per day — exceeding this consistently may cause digestive issues.\n\nGood dietary sources of vitamin C include citrus fruits, strawberries, bell peppers, broccoli, and kiwi. A single medium orange provides about 70 mg of vitamin C, nearly meeting the daily requirement for women.",
+          "created_at": "2026-10-02T14:00:16Z",
+          "claims": [
+            {
+              "id": "claim-005-01",
+              "text": "The RDA for vitamin C for adult men is approximately 90 mg per day.",
+              "source": null
+            },
+            {
+              "id": "claim-005-02",
+              "text": "The RDA for vitamin C for adult women is approximately 75 mg per day.",
+              "source": null
+            },
+            {
+              "id": "claim-005-03",
+              "text": "Pregnant women require 85 mg of vitamin C per day.",
+              "source": null
+            },
+            {
+              "id": "claim-005-04",
+              "text": "Breastfeeding women need 120 mg of vitamin C per day.",
+              "source": null
+            },
+            {
+              "id": "claim-005-05",
+              "text": "Smokers need an additional 35 mg of vitamin C per day beyond the standard RDA.",
+              "source": null
+            },
+            {
+              "id": "claim-005-06",
+              "text": "The tolerable upper intake level for vitamin C in adults is 2,000 mg per day.",
+              "source": null
+            },
+            {
+              "id": "claim-005-07",
+              "text": "A single medium orange provides about 70 mg of vitamin C.",
+              "source": null
+            }
+          ]
+        },
+        {
+          "id": "msg-005-03",
+          "role": "user",
+          "content": "What is the recommended daily intake of protein for a 70kg adult?",
+          "created_at": "2026-10-02T14:02:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-005-04",
+          "role": "assistant",
+          "content": "The general recommendation for protein intake is 0.8 grams per kilogram of body weight per day for sedentary adults. For a 70 kg adult, this translates to approximately 56 grams of protein per day.\n\nHowever, protein needs increase with physical activity level. Adults who engage in regular exercise may need 1.2 to 1.6 grams per kilogram per day (84 to 112 grams for a 70 kg person). Endurance athletes may need up to 1.4 g/kg, while strength/resistance athletes may benefit from up to 1.6 to 2.0 g/kg.\n\nOlder adults (65+) may also benefit from higher protein intake — around 1.0 to 1.2 g/kg per day — to help prevent age-related muscle loss (sarcopenia). Protein should ideally be distributed evenly across meals rather than consumed in one large serving.",
+          "created_at": "2026-10-02T14:02:15Z",
+          "claims": [
+            {
+              "id": "claim-005-08",
+              "text": "The general protein recommendation for sedentary adults is 0.8 g per kg of body weight per day.",
+              "source": null
+            },
+            {
+              "id": "claim-005-09",
+              "text": "A 70 kg sedentary adult needs approximately 56 grams of protein per day.",
+              "source": null
+            },
+            {
+              "id": "claim-005-10",
+              "text": "Physically active adults may need 1.2 to 1.6 grams per kg per day.",
+              "source": null
+            },
+            {
+              "id": "claim-005-11",
+              "text": "Strength/resistance athletes may benefit from up to 1.6 to 2.0 g/kg per day.",
+              "source": null
+            },
+            {
+              "id": "claim-005-12",
+              "text": "Older adults (65+) may benefit from 1.0 to 1.2 g/kg per day to prevent sarcopenia.",
+              "source": null
+            },
+            {
+              "id": "claim-005-13",
+              "text": "Protein should ideally be distributed evenly across meals.",
+              "source": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conv-006-general-nutrition",
+      "created_at": "2026-10-02T15:00:00Z",
+      "updated_at": "2026-10-02T15:03:00Z",
+      "messages": [
+        {
+          "id": "msg-006-01",
+          "role": "user",
+          "content": "What are complete proteins and where can I find them?",
+          "created_at": "2026-10-02T15:00:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-006-02",
+          "role": "assistant",
+          "content": "Complete proteins are foods that contain all nine essential amino acids in adequate proportions. Essential amino acids are those your body cannot produce on its own and must obtain from food. The nine essential amino acids are histidine, isoleucine, leucine, lysine, methionine, phenylalanine, threonine, tryptophan, and valine.\n\nAnimal-based complete proteins include meat, poultry, fish, eggs, and dairy products. These foods naturally contain all essential amino acids in balanced ratios.\n\nPlant-based complete proteins are less common but include quinoa, soy products (tofu, tempeh, edamame), buckwheat, hemp seeds, and chia seeds. Most other plant proteins are considered \"incomplete\" because they lack one or more essential amino acids, but combining different plant foods throughout the day (such as rice and beans) can provide all essential amino acids.",
+          "created_at": "2026-10-02T15:00:18Z",
+          "claims": [
+            {
+              "id": "claim-006-01",
+              "text": "Complete proteins contain all nine essential amino acids in adequate proportions.",
+              "source": null
+            },
+            {
+              "id": "claim-006-02",
+              "text": "The nine essential amino acids are histidine, isoleucine, leucine, lysine, methionine, phenylalanine, threonine, tryptophan, and valine.",
+              "source": null
+            },
+            {
+              "id": "claim-006-03",
+              "text": "Animal-based complete proteins include meat, poultry, fish, eggs, and dairy products.",
+              "source": null
+            },
+            {
+              "id": "claim-006-04",
+              "text": "Plant-based complete proteins include quinoa, soy products, buckwheat, hemp seeds, and chia seeds.",
+              "source": null
+            },
+            {
+              "id": "claim-006-05",
+              "text": "Combining different plant foods throughout the day can provide all essential amino acids.",
+              "source": null
+            }
+          ]
+        },
+        {
+          "id": "msg-006-03",
+          "role": "user",
+          "content": "Is brown rice healthier than white rice?",
+          "created_at": "2026-10-02T15:02:00Z",
+          "claims": []
+        },
+        {
+          "id": "msg-006-04",
+          "role": "assistant",
+          "content": "Brown rice and white rice differ primarily in processing — brown rice retains its bran layer and germ, while white rice has these removed during milling. This gives brown rice a nutritional edge in several areas, though white rice has its own advantages.\n\nBrown rice contains more fiber (about 3.5 g per cup vs 0.6 g for white rice), more B vitamins, and more minerals including magnesium, phosphorus, and selenium. The higher fiber content helps with digestive health and may contribute to better blood sugar regulation.\n\nWhite rice, however, is often enriched with folic acid and iron after processing. It is also easier to digest, which can be beneficial for people with certain digestive conditions. White rice has a lower level of arsenic than brown rice, as arsenic tends to accumulate in the outer layers of the grain.\n\nBoth types provide similar amounts of calories and carbohydrates per serving — about 200-215 calories per cooked cup.",
+          "created_at": "2026-10-02T15:02:20Z",
+          "claims": [
+            {
+              "id": "claim-006-06",
+              "text": "Brown rice retains its bran layer and germ, while white rice has these removed.",
+              "source": null
+            },
+            {
+              "id": "claim-006-07",
+              "text": "Brown rice contains about 3.5 g of fiber per cup vs 0.6 g for white rice.",
+              "source": null
+            },
+            {
+              "id": "claim-006-08",
+              "text": "Brown rice contains more B vitamins, magnesium, phosphorus, and selenium than white rice.",
+              "source": null
+            },
+            {
+              "id": "claim-006-09",
+              "text": "White rice is often enriched with folic acid and iron after processing.",
+              "source": null
+            },
+            {
+              "id": "claim-006-10",
+              "text": "White rice has a lower level of arsenic than brown rice.",
+              "source": null
+            },
+            {
+              "id": "claim-006-11",
+              "text": "Both types provide about 200-215 calories per cooked cup.",
+              "source": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
