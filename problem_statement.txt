@@ -1,0 +1,39 @@
+Problem Statement: AI Nutrition Assistant Prototype (Milestone 1)
+
+1. Context & Background
+Users frequently ask Large Language Models (LLMs) questions regarding food, nutrition, and food safety. However, LLMs often invent facts or provide shifting numbers across different runs. Because a wrong answer in the nutrition space reads exactly like a right one, users rarely verify the claims, leading to potential health risks.
+
+2. Objective
+To build the foundational prototype of an AI Nutrition Assistant chatbot that answers questions about food, nutrition, and food safety. For Milestone 1, the system will answer entirely from the model's own memory (without RAG/retrieval). The primary goal is to establish the complete architecture (frontend, backend, schema, and guardrails) so that Milestone 2 can seamlessly slide a retrieval layer underneath to turn invented claims into cited, verified ones.
+
+3. Core Requirements
+- Chat Frontend: A user interface featuring a message list, an input box, and a dedicated "sources" panel next to the conversation. (The sources panel will remain empty for Milestone 1).
+- Backend & Storage: A chat endpoint to handle requests, a secure server-side execution of the model call (no browser-based model calls), and a database to store conversations.
+- Response Schema: The LLM must return structured output (JSON/Schema) rather than prose. The schema must enforce:
+    - Answer text
+    - A list of claims
+    - Each claim must contain: Claim text, and a Source field.
+    - Constraint: Every source field must return as null for this milestone.
+- System Prompt: A robust set of instructions defining the assistant's role, response formatting, length, and strict boundaries on what topics it cannot touch.
+
+4. Scope Limits & Guardrails (Code-Enforced)
+The assistant must strictly refuse to provide:
+- Calorie or weight targets.
+- Recommendations regarding what a person should weigh.
+- Medical advice.
+Constraint: These limits must be enforced via application logic/code, not just reliant on the system prompt.
+
+5. Failure Logging & Testing
+- Define 10 test questions across 4 categories: Nutrient requirements, Food safety and storage, Cooking methods, and Ambiguous/unanswered topics.
+- Run all questions and record a "Failure Log" documenting:
+    - Unbacked claims stated as fact.
+    - Shifting numbers/metrics across multiple runs of the same prompt.
+    - Fake citations.
+    - Guardrail failures (answering when it should have declined).
+    - Hedged, useless answers.
+- Do not hardcode fixes for these failures; they must simply be recorded as a baseline for Milestone 2 comparisons.
+
+6. Deployment & Tech Stack Requirements
+- Model: Anthropic or OpenAI API (using Structured Output modes).
+- Stack: Next.js or React with FastAPI; Database via Supabase, Postgres, or SQLite.
+- Deployment: Must be live at a public URL via Vercel or Railway. Code must be pushed to GitHub.

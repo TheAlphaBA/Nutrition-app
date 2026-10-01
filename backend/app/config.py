@@ -1,0 +1,37 @@
+"""
+Application configuration using Pydantic Settings.
+Loads values from environment variables or .env file.
+"""
+
+from pydantic_settings import BaseSettings
+
+
+class Settings(BaseSettings):
+    """Application settings loaded from environment variables."""
+
+    # OpenAI
+    openai_api_key: str = ""
+
+    # Database
+    database_url: str = "sqlite:///./nutrition.db"
+
+    # Environment
+    environment: str = "development"
+
+    # CORS
+    cors_origins: str = "http://localhost:3000"
+
+    # Logging
+    log_level: str = "info"
+
+    @property
+    def cors_origins_list(self) -> list[str]:
+        """Parse comma-separated CORS origins into a list."""
+        return [origin.strip() for origin in self.cors_origins.split(",")]
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+
+settings = Settings()
