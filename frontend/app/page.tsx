@@ -9,6 +9,7 @@ import {
   fetchConversation,
   fetchConversations,
   sendChatMessage,
+  API_BASE,
 } from "../lib/api";
 import { Header } from "../components/Header";
 import { Sidebar } from "../components/Sidebar";
@@ -92,7 +93,7 @@ export default function Home() {
       const errorMsg: Message = {
         id: `err-${Date.now()}`,
         role: "assistant",
-        content: `⚠️ **Connection Error**: ${errorText}\n\nPlease verify that the FastAPI backend server is running on \`http://localhost:8000\`.`,
+        content: `⚠️ **Connection Error**: ${errorText}\n\nPlease verify that the FastAPI backend server is reachable at \`${API_BASE}\`.`,
         created_at: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, errorMsg]);

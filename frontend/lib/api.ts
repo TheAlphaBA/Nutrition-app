@@ -43,16 +43,26 @@ export interface ChatResponse {
   guardrail_reason: string | null;
 }
 
-function getApiBase(): string {
-  let url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
-  url = url.trim().replace(/\/+$/, "");
+export function getApiBase(): string {
+  let url = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").trim();
+  // Strip trailing slashes
+  url = url.replace(/\/+$/, "");
+  // If user omitted protocol
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    url = `https://${url}`;
+  }
+  // Strip accidental trailing /chat
+  if (url.endsWith("/chat")) {
+    url = url.slice(0, -5).replace(/\/+$/, "");
+  }
+  // Ensure it ends with /api
   if (!url.endsWith("/api")) {
     url = `${url}/api`;
   }
   return url;
 }
 
-const API_BASE = getApiBase();
+export const API_BASE = getApiBase();
 
 export async function fetchConversations(): Promise<ConversationSummary[]> {
   try {
