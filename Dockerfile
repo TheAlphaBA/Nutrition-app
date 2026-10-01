@@ -11,10 +11,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application source code
-COPY . .
+# Copy backend source code into /app
+COPY backend/ .
 
-# Environment variables default
+# Copy data folder into /app/data
+COPY data/ ./data/
+
+# Environment variables
 ENV PORT=8000
 ENV ENVIRONMENT=production
 ENV DATABASE_URL=sqlite:////app/nutrition.db
