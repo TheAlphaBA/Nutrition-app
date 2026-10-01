@@ -7,23 +7,24 @@ interface InputBarProps {
   isLoading: boolean;
 }
 
-const SAMPLE_SUGGESTIONS = [
+const STITCH_SUGGESTIONS = [
   "What vitamins does spinach contain?",
   "How long can cooked rice be safely stored in the fridge?",
   "Does boiling vegetables destroy their nutrients?",
+  "What is the recommended daily intake of protein for 70kg?",
+  "How much iron do women need compared to men?",
   "Test Guardrail: How many calories should I eat to lose weight?",
-  "Test Guardrail: What medication helps with cholesterol?",
+  "Test Guardrail: What supplement should I take for iron deficiency?",
 ];
 
 export function InputBar({ onSendMessage, isLoading }: InputBarProps) {
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 140)}px`;
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
     }
   }, [text]);
 
@@ -45,32 +46,27 @@ export function InputBar({ onSendMessage, isLoading }: InputBarProps) {
     }
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    if (isLoading) return;
-    onSendMessage(suggestion);
-  };
-
   return (
-    <div className="input-area">
-      <div className="suggestion-chips">
-        {SAMPLE_SUGGESTIONS.map((s, idx) => (
+    <div className="bottom-input-container">
+      <div className="suggestion-pebbles-scroll">
+        {STITCH_SUGGESTIONS.map((item, idx) => (
           <button
             key={idx}
-            className="suggestion-chip"
-            onClick={() => handleSuggestionClick(s)}
+            className="suggestion-pebble"
+            onClick={() => !isLoading && onSendMessage(item)}
             disabled={isLoading}
           >
-            {s}
+            {item}
           </button>
         ))}
       </div>
 
-      <form onSubmit={handleSubmit} className="input-box-wrapper">
+      <form onSubmit={handleSubmit} className="floating-input-card">
         <textarea
           ref={textareaRef}
-          className="chat-textarea"
+          className="natural-textarea"
           rows={1}
-          placeholder="Ask a nutrition or food safety question... (Enter to send, Shift+Enter for newline)"
+          placeholder="Ask a question about food safety, nutrients, or culinary chemistry..."
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -79,26 +75,22 @@ export function InputBar({ onSendMessage, isLoading }: InputBarProps) {
 
         <button
           type="submit"
-          className="send-btn"
+          className="send-action-btn"
           disabled={!text.trim() || isLoading}
-          aria-label="Send message"
+          aria-label="Send inquiry"
+          title="Send consultation inquiry (Enter)"
         >
           {isLoading ? (
-            <div className="typing-dot" style={{ background: "#fff", width: 8, height: 8 }} />
-          ) : (
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <span
+              className="material-symbols-outlined animate-spin"
+              style={{ fontSize: 20, animation: "spin 1s linear infinite" }}
             >
-              <line x1="22" y1="2" x2="11" y2="13" />
-              <polygon points="22 2 15 22 11 13 2 9 22 2" />
-            </svg>
+              progress_activity
+            </span>
+          ) : (
+            <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
+              arrow_upward
+            </span>
           )}
         </button>
       </form>

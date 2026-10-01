@@ -13,38 +13,55 @@ export function SourcesPanel({ claims, isOpen, onClose }: SourcesPanelProps) {
   if (!isOpen) return null;
 
   return (
-    <aside className="sources-panel">
-      <div className="sources-header">
-        <h2>
-          <span>📚</span>
-          Sources & Citations
-        </h2>
-        <button
-          onClick={onClose}
-          style={{
-            background: "transparent",
-            border: "none",
-            color: "var(--text-muted)",
-            fontSize: "1.25rem",
-            cursor: "pointer",
-          }}
-          aria-label="Close sources panel"
-        >
-          ✕
-        </button>
+    <aside className="sources-drawer">
+      <div className="drawer-header">
+        <h3>
+          <span className="material-symbols-outlined" style={{ color: "var(--primary)" }}>
+            library_books
+          </span>
+          Evidence & Citations
+        </h3>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span
+            style={{
+              padding: "2px 8px",
+              borderRadius: "9999px",
+              background: "var(--secondary-container)",
+              color: "var(--on-secondary-container)",
+              fontSize: "0.75rem",
+              fontWeight: 600,
+            }}
+          >
+            {claims.length} Claims
+          </span>
+          <button
+            onClick={onClose}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "var(--outline)",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              padding: 4,
+            }}
+            aria-label="Close citations drawer"
+          >
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        </div>
       </div>
 
-      <div className="sources-content">
-        <div className="m1-notice-box">
-          <h3>🔬 Milestone 1 Architecture Notice</h3>
+      <div className="drawer-body">
+        <div className="m1-grounding-notice">
+          <h4>🔬 Milestone 1 Grounding Notice</h4>
           <p>
-            In <strong>Milestone 1</strong>, answers and factual claims are generated strictly from the LLM&apos;s
-            internal knowledge (parametric memory). All citation sources are intentionally set to{" "}
-            <code>null</code>.
+            In <strong>Milestone 1</strong>, answers and factual claims are generated entirely from the LLM&apos;s
+            internal knowledge (parametric memory). Citation sources are strictly initialized to <code>null</code>.
           </p>
           <p style={{ marginTop: "0.5rem" }}>
-            <strong>Milestone 2</strong> will slide a retrieval-augmented generation (RAG) layer underneath, linking
-            each claim directly to verified sources such as USDA FoodData Central and peer-reviewed journals.
+            <strong>Milestone 2</strong> will connect a RAG retrieval pipeline (indexing USDA FoodData Central and FDA
+            standards) to turn these into clickable, verified citations.
           </p>
         </div>
 
@@ -55,19 +72,14 @@ export function SourcesPanel({ claims, isOpen, onClose }: SourcesPanelProps) {
               alignItems: "center",
               justifyContent: "space-between",
               marginBottom: "0.75rem",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              color: "var(--outline)",
             }}
           >
-            <span
-              style={{
-                fontSize: "0.75rem",
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                color: "var(--text-muted)",
-              }}
-            >
-              Extracted Claims ({claims.length})
-            </span>
+            <span>Extracted Claims Dossier</span>
           </div>
 
           {claims.length === 0 ? (
@@ -75,66 +87,61 @@ export function SourcesPanel({ claims, isOpen, onClose }: SourcesPanelProps) {
               style={{
                 padding: "2rem 1rem",
                 textAlign: "center",
-                color: "var(--text-muted)",
+                color: "var(--outline)",
                 fontSize: "0.85rem",
-                border: "1px dashed var(--border-subtle)",
+                border: "1px dashed rgba(116, 120, 113, 0.2)",
                 borderRadius: "var(--radius-md)",
               }}
             >
-              No claims extracted in this conversation yet. Ask a nutrition question to see claims appear here.
+              No factual claims extracted yet. Send a question to see claims appear here.
             </div>
           ) : (
-            <div className="sources-list">
+            <div className="citations-dossier-list">
               {claims.map((claim, idx) => (
-                <div
-                  key={claim.id || idx}
-                  style={{
-                    padding: "0.85rem",
-                    borderRadius: "var(--radius-md)",
-                    background: "rgba(255, 255, 255, 0.03)",
-                    border: "1px solid var(--border-subtle)",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.4rem",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <div key={claim.id || idx} className="citation-card-entry">
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <span
                       style={{
                         fontSize: "0.7rem",
                         fontWeight: 700,
-                        color: "var(--primary-400)",
-                        background: "rgba(16, 185, 129, 0.12)",
-                        padding: "2px 6px",
-                        borderRadius: "4px",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                        color: "var(--secondary)",
                       }}
                     >
-                      Claim #{idx + 1}
+                      Extracted Claim [{idx + 1}]
                     </span>
                     <span
                       style={{
                         fontSize: "0.65rem",
-                        color: "var(--accent-amber)",
-                        marginLeft: "auto",
+                        fontWeight: 600,
+                        color: "var(--tertiary)",
+                        background: "var(--surface-container-high)",
+                        padding: "2px 6px",
+                        borderRadius: "9999px",
                       }}
                     >
                       ● Source: null (M1)
                     </span>
                   </div>
 
-                  <p style={{ fontSize: "0.825rem", color: "var(--text-primary)", lineHeight: 1.5 }}>
+                  <p style={{ fontSize: "0.85rem", color: "var(--on-surface)", lineHeight: 1.5, margin: "0.25rem 0" }}>
                     {claim.text}
                   </p>
 
                   <div
                     style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                       fontSize: "0.7rem",
-                      color: "var(--text-muted)",
-                      paddingTop: "0.25rem",
-                      borderTop: "1px solid rgba(255, 255, 255, 0.04)",
+                      color: "var(--outline)",
+                      paddingTop: "0.35rem",
+                      borderTop: "1px solid rgba(116, 120, 113, 0.08)",
                     }}
                   >
-                    Target verification dataset: <em>USDA FoodData Central / FDA (Milestone 2)</em>
+                    <span>Target: USDA FoodData Central</span>
+                    <span style={{ color: "var(--primary)", fontWeight: 600 }}>Milestone 2 Seam</span>
                   </div>
                 </div>
               ))}

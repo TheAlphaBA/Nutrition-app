@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from "react";
 import { Message, Claim } from "../lib/api";
 import { MessageBubble } from "./MessageBubble";
 import { InputBar } from "./InputBar";
+import { NutriBotLogo } from "./NutriBotLogo";
 
 interface ChatWindowProps {
   messages: Message[];
@@ -25,25 +26,28 @@ export function ChatWindow({
   }, [messages, isLoading]);
 
   return (
-    <div className="main-chat">
-      <div className="messages-container">
+    <div className="chat-workspace">
+      <div className="messages-stream">
         {messages.length === 0 ? (
-          <div className="empty-hero">
-            <div className="hero-icon">🥗</div>
-            <h2>AI Nutrition Assistant</h2>
-            <p>
-              Ask evidence-based questions about whole foods, nutrient retention, food safety storage,
-              and cooking techniques. Every claim is extracted and tracked for Milestone 2 verification.
+          <div className="hero-welcome">
+            <div className="hero-logo-box">
+              <NutriBotLogo className="h-10 w-auto" />
+            </div>
+
+            <h2 className="hero-title">Nutritional Editorial &amp; Organic Intelligence</h2>
+            <p className="hero-subtitle">
+              Synthesizing biochemical food safety, nutrient bioavailability, and cooking thermodynamics
+              into structured, verifiable dietary guidance. Every factual claim is isolated for Milestone 2 RAG verification.
             </p>
 
-            <div className="safety-notes-grid">
-              <div className="safety-card">
-                <strong>🔬 Claim Extraction (M1)</strong>
-                Answers are broken down into individual factual claims with citation status tracked.
+            <div className="hero-guidelines-grid">
+              <div className="guideline-card">
+                <strong>🔬 Claim Extraction Protocol</strong>
+                <p>Every response is decomposed into standalone factual claims with null citations in Milestone 1.</p>
               </div>
-              <div className="safety-card">
-                <strong>🛡️ Code Guardrails</strong>
-                Code strictly refuses personalized calorie targets, body weight advice, and medical diagnoses.
+              <div className="guideline-card">
+                <strong>🛡️ Deterministic Safety Guardrails</strong>
+                <p>Code pre-filters strictly intercept calorie targets, body weight goals, and medical prescriptions.</p>
               </div>
             </div>
           </div>
@@ -58,15 +62,26 @@ export function ChatWindow({
             ))}
 
             {isLoading && (
-              <div className="message-wrapper bot">
-                <div className="avatar bot">🥗</div>
-                <div className="message-content-box">
-                  <div className="message-bubble bot" style={{ display: "inline-flex" }}>
-                    <div className="typing-indicator">
-                      <span className="typing-dot" />
-                      <span className="typing-dot" />
-                      <span className="typing-dot" />
-                    </div>
+              <div className="assistant-card" style={{ padding: "1.25rem 1.5rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <div className="bot-avatar-badge">
+                    <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
+                      eco
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontSize: "0.9rem", color: "var(--on-surface-variant)", fontWeight: 500 }}>
+                      Synthesizing nutritional assessment...
+                    </span>
+                    <span
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        background: "var(--primary)",
+                        animation: "pulseDot 1.2s infinite ease-in-out",
+                      }}
+                    />
                   </div>
                 </div>
               </div>

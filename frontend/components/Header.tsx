@@ -3,15 +3,16 @@
 import React from "react";
 
 interface HeaderProps {
+  activeTitle?: string;
   sourcesCount: number;
   isSourcesOpen: boolean;
   onToggleSources: () => void;
-  isSidebarOpen: boolean;
   onToggleSidebar: () => void;
   backendOnline: boolean;
 }
 
 export function Header({
+  activeTitle = "Nutritional Inquiry Workspace",
   sourcesCount,
   isSourcesOpen,
   onToggleSources,
@@ -19,52 +20,58 @@ export function Header({
   backendOnline,
 }: HeaderProps) {
   return (
-    <header className="chat-header">
-      <div className="header-brand">
+    <header className="top-header">
+      <div className="header-left">
         <button
           onClick={onToggleSidebar}
-          aria-label="Toggle Conversations"
-          style={{
-            background: "transparent",
-            border: "none",
-            color: "var(--text-secondary)",
-            cursor: "pointer",
-            fontSize: "1.2rem",
-            display: "flex",
-            alignItems: "center",
-          }}
+          className="toggle-sidebar-btn"
+          aria-label="Toggle Navigation"
+          title="Toggle Consultations Sidebar"
         >
-          ☰
+          <span className="material-symbols-outlined">menu</span>
         </button>
 
-        <div className="brand-icon">🥗</div>
-        <div className="brand-info">
-          <h1>
-            NutriBot
-            <span className="badge-m1">Milestone 1</span>
-          </h1>
-          <p>
-            {backendOnline ? (
-              <span style={{ color: "#34d399", display: "inline-flex", alignItems: "center", gap: 4 }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#34d399" }} />
-                Gemini 3.1 Flash • Structured Output
-              </span>
-            ) : (
-              <span style={{ color: "#f87171" }}>Offline mode</span>
-            )}
-          </p>
+        <div className="memory-active-pill">
+          <span className="pulse-dot" />
+          <span>Parametric Memory: Active</span>
         </div>
+
+        <div style={{ width: 1, height: 16, background: "var(--outline-variant)" }} />
+
+        <span className="header-title-text" title={activeTitle}>
+          {activeTitle}
+        </span>
       </div>
 
-      <div className="header-actions">
+      <div className="header-right">
         <button
           onClick={onToggleSources}
-          className={`sources-toggle-btn ${isSourcesOpen ? "active" : ""}`}
-          title="View factual claims & citation status"
+          className={`citations-btn ${isSourcesOpen ? "active" : ""}`}
+          title="Inspect extracted claims & citation grounding"
         >
-          <span style={{ fontSize: "0.9rem" }}>📚</span>
-          Sources ({sourcesCount})
+          <span className="material-symbols-outlined" style={{ fontSize: 18, color: "var(--primary)" }}>
+            library_books
+          </span>
+          <span>{sourcesCount} Citations Active</span>
         </button>
+
+        <div
+          style={{
+            width: 34,
+            height: 34,
+            borderRadius: "50%",
+            background: "var(--primary)",
+            color: "var(--on-primary)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          title={backendOnline ? "Gemini 3.1 Flash Online" : "Local Mode"}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
+            psychology
+          </span>
+        </div>
       </div>
     </header>
   );

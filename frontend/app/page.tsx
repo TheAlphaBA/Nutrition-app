@@ -46,7 +46,7 @@ export default function Home() {
     }
   };
 
-  // Start new chat
+  // Start new consultation
   const handleNewChat = () => {
     setActiveConversationId(null);
     setMessages([]);
@@ -109,6 +109,10 @@ export default function Home() {
     return acc;
   }, []);
 
+  // Compute active title for header
+  const activeSummary = conversations.find((c) => c.id === activeConversationId);
+  const activeTitle = activeSummary ? activeSummary.preview : "Nutritional Inquiry Workspace";
+
   return (
     <div className="app-container">
       <Sidebar
@@ -121,10 +125,10 @@ export default function Home() {
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
         <Header
+          activeTitle={activeTitle}
           sourcesCount={allCurrentClaims.length}
           isSourcesOpen={isSourcesOpen}
           onToggleSources={() => setIsSourcesOpen((prev) => !prev)}
-          isSidebarOpen={isSidebarOpen}
           onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
           backendOnline={backendOnline}
         />
