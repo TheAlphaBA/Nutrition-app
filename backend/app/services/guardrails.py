@@ -66,7 +66,8 @@ PATTERNS: Dict[GuardrailCategory, List[str]] = {
         r"weight loss .*(plan|diet|program)",
     ],
     GuardrailCategory.MEDICAL_ADVICE: [
-        r"should i take .*supplement.*for",
+        r"(should i take|what supplement|which supplement).*supplement.*for",
+        r".*supplement should i take for",
         r"what medication (helps|works|is good|should i take)",
         r"prescribe (something|a drug|medicine|medication) for",
         r"(treat|cure|remedy) (my|the) .*(deficiency|disease|illness|condition|pain|infection)",
