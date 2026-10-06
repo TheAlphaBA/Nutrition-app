@@ -23,30 +23,35 @@ A step-by-step deployment guide for deploying the complete **NutriBot AI Nutriti
 
 ```mermaid
 flowchart LR
-    subgraph Client
-        Browser["User Browser"]
+    Browser(["👤 User Browser"])
+
+    subgraph Vercel["☁️ Vercel Cloud (Frontend)"]
+        direction TB
+        NextApp["Next.js 16 App Router\nNutritional Editorial UI"]
+        VEnv["NEXT_PUBLIC_API_URL\n↪ baked into JS bundle at build time"]
     end
 
-    subgraph Vercel["Vercel Cloud (Frontend)"]
-        NextApp["Next.js 16 App Router\n(Nutritional Editorial UI)"]
+    subgraph Railway["🚂 Railway Cloud (Backend)"]
+        direction TB
+        FastAPI["FastAPI API Server\n(Uvicorn, port $PORT)"]
+        Guardrails["🛡️ Code Guardrails Engine"]
+        SQLite[("SQLite Database\nnutrition.db")]
     end
 
-    subgraph Railway["Railway Cloud (Backend)"]
-        FastAPI["FastAPI API Server\n(Uvicorn)"]
-        Guardrails["Code Guardrails Engine"]
-        SQLite[("SQLite Database\n(nutrition.db)")]
+    subgraph External["🤖 AI Provider"]
+        Gemini["Google Gemini 3.1 Flash\n(structured JSON output)"]
     end
 
-    subgraph External["AI Providers"]
-        Gemini["Google Gemini 3.1 Flash\n(Google AI Studio)"]
-    end
-
-    Browser -->|HTTPS| NextApp
-    NextApp -->|REST /api/chat| FastAPI
-    FastAPI -->|Pre-filter Check| Guardrails
-    FastAPI -->|Structured JSON Prompt| Gemini
-    FastAPI -->|Store Threads & Claims| SQLite
-    FastAPI -->>|ChatResponse + Claims| NextApp
+    Browser -->|"HTTPS\nhttps://nutribot.vercel.app"| NextApp
+    NextApp -->|"REST POST /api/chat\nhttps://athletic-consideration-production-112f.up.railway.app/api"| FastAPI
+    FastAPI -->|"Pre-filter"| Guardrails
+    Guardrails -->|"🚫 blocked"| FastAPI
+    Guardrails -->|"✅ passed"| FastAPI
+    FastAPI -->|"Structured JSON Prompt"| Gemini
+    Gemini -->|"JSON {answer, claims[]}"| FastAPI
+    FastAPI <-->|"Store Threads & Claims"| SQLite
+    FastAPI -->>|"ChatResponse + Claims"| NextApp
+    VEnv -.->|"env var"| NextApp
 ```
 
 ---
@@ -65,6 +70,23 @@ Ensure you have the following ready before starting:
 ---
 
 ## 3. Pre-Deployment Local Verification Checklist
+
+### Pre-Deployment Verification Flow
+
+```mermaid
+flowchart LR
+    LocalDev(["💻 Local Dev"])
+    LocalDev -->|"18 tests pass"| UnitTests["✔️ Unit Tests\nPYTHONPATH=backend\npython3 -m unittest"]
+    LocalDev -->|"0 errors"| FEBuild["✔️ Next.js Build\nnpm run build"]
+    LocalDev -->|"200 OK"| HealthCheck["✔️ /health endpoint\ncurl localhost:8000/health"]
+    LocalDev -->|"not committed"| GitIgnore["✔️ .gitignore\n.env never in git"]
+    
+    UnitTests --> ReadyToPush{"✅ Ready\nto push?"}
+    FEBuild --> ReadyToPush
+    HealthCheck --> ReadyToPush
+    GitIgnore --> ReadyToPush
+    ReadyToPush -->|yes| GitHub["📦 git push origin main"]
+```
 
 Verify that local code builds and passes all automated tests before pushing:
 

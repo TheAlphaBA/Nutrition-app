@@ -104,18 +104,73 @@ Run all questions and record a **Failure Log** documenting:
 ## Architecture Overview
 
 ```mermaid
-flowchart LR
-    A["User (Chat UI)"] -->|question| B["Backend (FastAPI)"]
-    B -->|structured prompt| C["LLM API"]
-    C -->|JSON schema response| B
-    B -->|store| D["Database"]
-    B -->|answer + claims| A
-    A -->|"sources panel (empty in M1)"| A
+flowchart TB
+    User(["👤 User"])
+
+    subgraph Frontend["Frontend — Next.js (Vercel)"]
+        direction TB
+        ChatUI["Chat Interface"]
+        ClaimBadges["Claim Badges"]
+        SourcesPanel["Sources Panel\n(empty in M1)"]
+    end
+
+    subgraph Backend["Backend — FastAPI (Railway)"]
+        direction TB
+        ChatEndpoint["POST /api/chat"]
+        GuardrailEngine["🛡️ Code Guardrail Engine\n(pre-LLM filter)"]
+        LLMService["LLM Service\n(Gemini / OpenAI)"]
+        SchemaValidator["Schema Validator\n(Pydantic)"]        
+    end
+
+    subgraph Storage["Persistence — SQLite"]
+        direction LR
+        Conversations[("conversations")]
+        Messages[("messages")]
+        Claims[("claims")]
+        FailureLogs[("failure_logs")]
+    end
+
+    User -->|"types question"| ChatUI
+    ChatUI -->|"POST /api/chat"| ChatEndpoint
+    ChatEndpoint -->|"check"| GuardrailEngine
+    GuardrailEngine -->|"🚫 BLOCKED — refusal"| ChatEndpoint
+    GuardrailEngine -->|"✅ PASSED"| LLMService
+    LLMService -->|"structured JSON prompt"| LLMService
+    LLMService -->|"raw response"| SchemaValidator
+    SchemaValidator -->|"validated + source:null enforced"| ChatEndpoint
+    ChatEndpoint -->|"persist thread"| Conversations
+    ChatEndpoint -->|"persist messages"| Messages
+    ChatEndpoint -->|"persist claims"| Claims
+    ChatEndpoint -->|"answer + claims[]"| ChatUI
+    ChatUI --> ClaimBadges
+    ClaimBadges -.->|"M2: will link sources"| SourcesPanel
+    User -->|"reads response"| ChatUI
 ```
 
 ---
 
 ## Milestone Roadmap
+
+```mermaid
+gantt
+    title Milestone Roadmap — AI Nutrition Assistant
+    dateFormat  YYYY-MM
+    axisFormat  %b %Y
+
+    section Milestone 1
+    Full Architecture Setup          :done, m1a, 2026-10, 1M
+    LLM Memory-Only Answers          :done, m1b, after m1a, 2w
+    Code-Enforced Guardrails         :done, m1c, after m1a, 2w
+    Failure Baseline Logging         :done, m1d, after m1b, 1w
+    Public Deployment (Vercel+Rail)  :done, m1e, after m1d, 1w
+
+    section Milestone 2
+    RAG Retrieval Layer              :active, m2a, 2026-11, 3w
+    Populate claims[].source         :m2b, after m2a, 2w
+    Source Verification Pipeline     :m2c, after m2b, 2w
+    Sources Panel UI (live links)    :m2d, after m2b, 2w
+    M2 Eval vs M1 Baseline           :m2e, after m2c, 1w
+```
 
 | Milestone   | Focus                                                                 |
 | ----------- | --------------------------------------------------------------------- |

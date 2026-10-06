@@ -10,30 +10,31 @@ This plan breaks Milestone 1 into **6 sequential phases**. Each phase is self-co
 
 ```mermaid
 gantt
-    title Milestone 1 — Implementation Timeline
+    title Milestone 1 — Implementation Timeline (Actual)
     dateFormat  YYYY-MM-DD
     axisFormat  %b %d
 
-    section Phase 1
-    Project Scaffolding           :p1, 2026-10-02, 1d
+    section Phase 1 — Scaffolding
+    Project structure + config       :done, p1, 2026-10-01, 1d
 
-    section Phase 2
-    Database & Models             :p2, after p1, 1d
+    section Phase 2 — Database
+    SQLAlchemy models + seed data    :done, p2, after p1, 1d
 
-    section Phase 3
-    Backend Core (API + LLM)      :p3, after p2, 2d
+    section Phase 3 — Backend Core
+    FastAPI endpoints + LLM service  :done, p3, after p2, 2d
 
-    section Phase 4
-    Guardrail Engine              :p4, after p3, 1d
+    section Phase 4 — Guardrails
+    Regex guardrail engine + tests   :done, p4, after p3, 1d
 
-    section Phase 5
-    Chat Frontend                 :p5, after p3, 2d
+    section Phase 5 — Frontend
+    Next.js Stitch UI (all components):done, p5, after p3, 2d
 
-    section Phase 6
-    Failure Testing               :p6, after p4, 1d
+    section Phase 6 — Failure Testing
+    30-run test suite + eval-report  :done, p6, after p4, 1d
 
-    section Phase 7
-    Deployment & Launch           :p7, after p5, 1d
+    section Phase 7 — Deployment
+    Railway + Vercel deployment      :done, p7, after p5, 1d
+    Production smoke tests           :done, p8, after p7, 1d
 ```
 
 ---
@@ -216,18 +217,20 @@ async def get_llm_response(messages: list[dict]) -> dict:
 
 ```mermaid
 sequenceDiagram
-    participant Client
+    participant Client as 💻 Client
     participant API as POST /api/chat
     participant DB as SQLite
-    participant LLM as OpenAI API
+    participant LLM as Gemini API
 
-    Client->>API: {message: "Benefits of spinach?"}
-    API->>DB: Create/get conversation
-    API->>DB: Store user message
-    API->>LLM: system_prompt + history + message
-    LLM-->>API: {answer, claims[{text, source: null}]}
-    API->>DB: Store assistant message + claims
-    API-->>Client: ChatResponse
+    Client->>API: {message: "Benefits of spinach?", conversation_id: null}
+    API->>DB: INSERT conversation (auto-generate UUID)
+    API->>DB: INSERT user message
+    API->>LLM: system_prompt + [user_msg]\njson_schema enforced
+    LLM-->>API: {answer: "Spinach contains...",\nclaims: [{text: "...", source: null}]}
+    Note over API: Force source=null on all claims\nPydantic validation pass
+    API->>DB: INSERT assistant message
+    API->>DB: INSERT claim records
+    API-->>Client: ChatResponse {conversation_id, message_id,\nanswer, claims[], guardrail_triggered: false}
 ```
 
 ### Acceptance Criteria
@@ -405,19 +408,27 @@ interface ChatResponse {
 
 ```mermaid
 flowchart TB
-    Page["page.tsx (state manager)"]
-    Page --> Header["Header"]
-    Page --> CW["ChatWindow"]
-    Page --> IB["InputBar"]
-    Page --> SP["SourcesPanel"]
+    Page["page.tsx\n(state manager)"]
+    Page --> Header["Header\n(branding + sources toggle)"]
+    Page --> Sidebar["Sidebar\n(conversation history)"]
+    Page --> CW["ChatWindow\n(scrollable message list)"]
+    Page --> IB["InputBar\n(textarea + send button)"]
+    Page --> SP["SourcesPanel\n(slide-in drawer)"]    
 
-    CW --> MB_U["MessageBubble (user)"]
-    CW --> MB_A["MessageBubble (assistant)"]
-    MB_A --> CB1["ClaimBadge"]
-    MB_A --> CB2["ClaimBadge"]
-    MB_A --> CBn["ClaimBadge..."]
+    CW --> MB_U["MessageBubble\nrole: user"]
+    CW --> MB_A["MessageBubble\nrole: assistant"]
+    MB_A --> CB1["ClaimBadge [1]"]
+    MB_A --> CB2["ClaimBadge [2]"]
+    MB_A --> CBn["ClaimBadge [N]..."]
 
-    SP --> Placeholder["'Sources will appear here in a future update'"]
+    SP --> Placeholder["M1: Milestone 1 Notice\n'Sources will appear in M2'"]
+
+    style MB_U fill:#e8f4fd,stroke:#0369a1,color:#000
+    style MB_A fill:#f0fdf4,stroke:#15803d,color:#000
+    style CB1 fill:#ecfdf5,stroke:#059669,color:#000
+    style CB2 fill:#ecfdf5,stroke:#059669,color:#000
+    style CBn fill:#ecfdf5,stroke:#059669,color:#000
+    style Placeholder fill:#fefce8,stroke:#ca8a04,color:#000
 ```
 
 ### Key UX Details
@@ -582,14 +593,22 @@ NEXT_PUBLIC_API_URL=https://<railway-app>.railway.app
 ## Phase Summary & Dependencies
 
 ```mermaid
-flowchart LR
-    P1["Phase 1: Scaffolding"] --> P2["Phase 2: Database"]
-    P2 --> P3["Phase 3: Backend Core"]
-    P3 --> P4["Phase 4: Guardrails"]
-    P3 --> P5["Phase 5: Frontend"]
-    P4 --> P6["Phase 6: Failure Testing"]
-    P5 --> P7["Phase 7: Deployment"]
+flowchart TD
+    P1["Phase 1\nScaffolding\n✔️ done"] --> P2["Phase 2\nDatabase\n✔️ done"]
+    P2 --> P3["Phase 3\nBackend Core\n✔️ done"]
+    P3 --> P4["Phase 4\nGuardrails\n✔️ done"]
+    P3 --> P5["Phase 5\nFrontend\n✔️ done"]
+    P4 --> P6["Phase 6\nFailure Testing\n✔️ done"]
+    P5 --> P7["Phase 7\nDeployment\n✔️ done"]
     P6 --> P7
+
+    style P1 fill:#d4edda,stroke:#28a745,color:#000
+    style P2 fill:#d4edda,stroke:#28a745,color:#000
+    style P3 fill:#d4edda,stroke:#28a745,color:#000
+    style P4 fill:#d4edda,stroke:#28a745,color:#000
+    style P5 fill:#d4edda,stroke:#28a745,color:#000
+    style P6 fill:#d4edda,stroke:#28a745,color:#000
+    style P7 fill:#d4edda,stroke:#28a745,color:#000
 ```
 
 | Phase | Name                  | Depends On | Key Deliverable                              |

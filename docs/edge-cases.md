@@ -377,45 +377,59 @@ All error responses should follow a consistent format:
 
 ```mermaid
 flowchart TB
-    subgraph Input["Input Edge Cases"]
-        I1["Empty / whitespace messages"]
-        I2["Extremely long input"]
-        I3["Special chars / emoji / XSS"]
-        I4["Multi-language input"]
-        I5["Prompt injection"]
+    subgraph Input["💬 Input Edge Cases"]
+        I1["⚠️ Empty / whitespace messages"]
+        I2["🟥 Extremely long input \"\u003e5000 chars\""]
+        I3["🟡 Special chars / emoji / XSS"]
+        I4["🟡 Multi-language input"]
+        I5["🟥 Prompt injection"]
     end
 
-    subgraph Guardrail["Guardrail Edge Cases"]
-        G1["Evasion via misspelling"]
-        G2["Evasion via synonyms"]
-        G3["False positives"]
-        G4["Multi-category match"]
-        G5["Indirect / split phrasing"]
+    subgraph Guardrail["🛡️ Guardrail Edge Cases"]
+        G1["🟥 Evasion via misspelling"]
+        G2["🟥 Evasion via synonyms"]
+        G3["🟡 False positives"]
+        G4["🟡 Multi-category match"]
+        G5["🟥 Indirect / split phrasing"]
     end
 
-    subgraph LLM["LLM Edge Cases"]
-        L1["API failures / timeouts"]
-        L2["Malformed JSON response"]
-        L3["Empty answer or claims"]
-        L4["Source not null (M1 violation)"]
-        L5["Token limit exceeded"]
+    subgraph LLM["🤖 LLM Edge Cases"]
+        L1["🟥 API failures / timeouts"]
+        L2["🟥 Malformed JSON response"]
+        L3["🟡 Empty answer or claims"]
+        L4["🟥 Source not null \"M1 violation\""]
+        L5["🟡 Token limit exceeded"]
     end
 
-    subgraph Frontend["Frontend Edge Cases"]
-        F1["Network failures"]
-        F2["Loading state management"]
-        F3["Scroll performance"]
-        F4["Mobile responsiveness"]
-        F5["State persistence"]
+    subgraph Frontend["💻 Frontend Edge Cases"]
+        F1["🟥 Network failures"]
+        F2["🟡 Loading state management"]
+        F3["🟢 Scroll performance"]
+        F4["🟡 Mobile responsiveness"]
+        F5["🟡 State persistence"]
     end
 
-    subgraph Deploy["Deployment Edge Cases"]
-        D1["Cold starts"]
-        D2["SQLite data loss on redeploy"]
-        D3["CORS misconfig"]
-        D4["Env var mismatch"]
-        D5["API key exposure"]
+    subgraph Deploy["🚂 Deployment Edge Cases"]
+        D1["🟡 Cold starts"]
+        D2["🟥 SQLite data loss on redeploy"]
+        D3["🟥 CORS misconfig"]
+        D4["🟡 Env var mismatch"]
+        D5["🟥 API key exposure"]
     end
+
+    Legend["🟥 Critical &nbsp;&nbsp; 🟡 Medium &nbsp;&nbsp; 🟢 Low"]
+
+    style I2 fill:#f8d7da,stroke:#dc3545,color:#000
+    style I5 fill:#f8d7da,stroke:#dc3545,color:#000
+    style G1 fill:#f8d7da,stroke:#dc3545,color:#000
+    style G2 fill:#f8d7da,stroke:#dc3545,color:#000
+    style L1 fill:#f8d7da,stroke:#dc3545,color:#000
+    style L2 fill:#f8d7da,stroke:#dc3545,color:#000
+    style L4 fill:#f8d7da,stroke:#dc3545,color:#000
+    style F1 fill:#f8d7da,stroke:#dc3545,color:#000
+    style D2 fill:#f8d7da,stroke:#dc3545,color:#000
+    style D3 fill:#f8d7da,stroke:#dc3545,color:#000
+    style D5 fill:#f8d7da,stroke:#dc3545,color:#000
 ```
 
 ### Edge Case Count by Phase

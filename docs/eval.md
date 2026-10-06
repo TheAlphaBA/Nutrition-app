@@ -35,31 +35,31 @@
 
 ```mermaid
 mindmap
-  root((Milestone 1 Eval))
+  root(("Milestone 1\nEvaluation"))
     Functional
-      API endpoints
-      Database persistence
-      End-to-end flow
+      ("API Endpoints\n/api/chat, /health\n/api/conversations")
+      ("Database Persistence\nconversations, messages,\nclaims stored correctly")
+      ("End-to-End Flow\nUser → Frontend → Backend → Gemini")
     Quality
-      Response accuracy
-      Schema compliance
-      Claim extraction
+      ("Response Accuracy\nnutrient values, food safety")
+      ("Schema Compliance\nPydantic validated\njson_schema enforced")
+      ("Claim Extraction\nextracted from answer text\nsource: null guaranteed")
     Safety
-      Guardrail precision
-      Guardrail recall
-      Prompt injection resistance
+      ("Guardrail Precision\nno false positives on\nlegitimate questions")
+      ("Guardrail Recall\nno false negatives on\nprohibited questions")
+      ("Prompt Injection\nresistance")
     Reliability
-      Error handling
-      Failure logging
-      Baseline integrity
+      ("Error Handling\n4xx / 5xx responses")
+      ("Failure Logging\n30 runs across 10 questions")
+      ("Baseline Integrity\nbaseline preserved for M2")
     Deployment
-      Uptime
-      Cold start
-      CORS
+      ("Uptime\nRailway health check 200")
+      ("Cold Start\n< 30s acceptable")
+      ("CORS\n*.vercel.app allowed")
     UX
-      Responsiveness
-      Loading states
-      Error messages
+      ("Responsiveness\nmobile + desktop")
+      ("Loading States\nthinking indicator")
+      ("Error Messages\nuser-friendly, actionable")
 ```
 
 ---
@@ -601,6 +601,18 @@ Total = (API × 0.20) + (Schema × 0.15) + (Guardrail × 0.20) + (Quality × 0.1
 | ✅ **Pass** | ≥ 80 | Milestone 1 complete; ready for M2 |
 | ⚠️ **Conditional Pass** | 65–79 | Key features work but some gaps to address |
 | ❌ **Fail** | < 65 | Critical features missing or broken |
+
+```mermaid
+pie title Milestone 1 Evaluation Weights
+    "API Correctness" : 20
+    "Guardrail Effectiveness" : 20
+    "Schema Compliance" : 15
+    "LLM Response Quality" : 10
+    "Failure Baseline" : 10
+    "Frontend / UX" : 10
+    "Deployment" : 10
+    "Database Integrity" : 5
+```
 
 ---
 

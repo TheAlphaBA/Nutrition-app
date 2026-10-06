@@ -8,42 +8,58 @@
 
 ```mermaid
 flowchart TB
-    subgraph Client["Frontend (Next.js)"]
-        UI["Chat UI"]
-        SP["Sources Panel"]
-        MS["Message Store (React State)"]
+    User(["👤 User (Browser)"])
+
+    subgraph Frontend["☁️ Vercel — Next.js Frontend"]
+        direction TB
+        Header["Header Component\n(NutriBot branding + Sources toggle)"]
+        Sidebar["Sidebar\n(Conversation history)"]        
+        ChatUI["ChatWindow\n(message list + auto-scroll)"]
+        MsgBubble["MessageBubble\n(user / assistant rendering)"]
+        ClaimBadge["ClaimBadge ×N\n(pill chips)"]        
+        InputBar["InputBar\n(text input + send)"]
+        SourcesDrawer["SourcesPanel\n(right drawer — empty M1)"]
     end
 
-    subgraph Server["Backend (FastAPI)"]
-        API["POST /api/chat"]
-        GR["Guardrail Engine"]
-        LLM["LLM Service"]
-        SC["Schema Validator"]
+    subgraph Backend["🚂 Railway — FastAPI Backend"]
+        direction TB
+        Router["POST /api/chat\nGET /api/conversations\nGET /health"]
+        Guardrails["🛡️ Guardrail Engine\nregex pattern matching\n3 blocked categories"]
+        LLM["LLM Service\nGemini 3.1 Flash (primary)\nFallback chain → offline"]
+        Validator["Pydantic Schema Validator\nsource: null enforced"]
     end
 
-    subgraph External["External Services"]
-        OAI["OpenAI API (Structured Output)"]
+    subgraph DB["💾 SQLite — nutrition.db"]
+        direction LR
+        T1[("conversations")]
+        T2[("messages")]
+        T3[("claims")]
+        T4[("failure_logs")]
     end
 
-    subgraph Storage["Database (SQLite)"]
-        CONV["conversations"]
-        MSG["messages"]
-        CL["claims"]
-        FL["failure_logs"]
+    subgraph Gemini["🤖 Google AI Studio"]
+        GeminiAPI["Gemini 3.1 Flash\n(structured JSON output)"]        
     end
 
-    UI -->|user message| API
-    API -->|input text| GR
-    GR -->|blocked| API
-    GR -->|passed| LLM
-    LLM -->|structured prompt + schema| OAI
-    OAI -->|JSON response| LLM
-    LLM -->|raw response| SC
-    SC -->|validated response| API
-    API -->|persist| MSG
-    API -->|persist| CL
-    API -->|answer + claims| UI
-    SP -->|"reads claims[].source (null in M1)"| MS
+    User -->|HTTPS| Header
+    User -->|HTTPS| Sidebar
+    User -->|type + send| InputBar
+    InputBar -->|POST /api/chat| Router
+    Router -->|"check_guardrails()"| Guardrails
+    Guardrails -->|"🚫 blocked → refusal"| Router
+    Guardrails -->|"✅ passed"| LLM
+    LLM -->|"structured prompt + json_schema"| GeminiAPI
+    GeminiAPI -->|"JSON {answer, claims[]}"| LLM
+    LLM -->|raw response| Validator
+    Validator -->|"validated response\n(source:null guaranteed)"| Router
+    Router -->|persist| T1
+    Router -->|persist| T2
+    Router -->|persist| T3
+    Router -->|"ChatResponse {answer, claims[]}"| ChatUI
+    ChatUI --> MsgBubble
+    MsgBubble --> ClaimBadge
+    ClaimBadge -.->|"M2: link to sources"| SourcesDrawer
+    Sidebar -->|load history| Router
 ```
 
 ---
@@ -311,11 +327,25 @@ The guardrail system operates as a **pre-processing filter** before the user's m
 
 ```mermaid
 flowchart LR
-    INPUT["User Message"] --> KW["Keyword / Pattern Matcher"]
-    KW -->|match found| BLOCK["Return Refusal Response"]
-    KW -->|no match| INTENT["Intent Classifier (regex + heuristics)"]
-    INTENT -->|flagged| BLOCK
-    INTENT -->|safe| LLM["Forward to LLM"]
+    INPUT(["User Message"])
+    INPUT --> NORM["Normalise\n(lowercase, strip whitespace)"]
+    NORM --> KW{"Pattern Match Loop\n3 categories × N patterns"}
+    KW -->|"✅ match found"| BLOCK
+    KW -->|"❌ no match in all categories"| PASS
+    
+    BLOCK["Build GuardrailResult\n(blocked=True, category, reason)"]
+    PASS["Build GuardrailResult\n(blocked=False)"]
+    
+    BLOCK --> RES{"Route"}
+    PASS --> RES
+    
+    RES -->|blocked=True| REFUSAL["Return refusal message\nto client directly\n🚫 LLM never called"]
+    RES -->|blocked=False| LLM["Forward message\nto LLM Service ✅"]
+
+    style REFUSAL fill:#f8d7da,stroke:#dc3545,color:#000
+    style LLM fill:#d4edda,stroke:#28a745,color:#000
+    style BLOCK fill:#fff3cd,stroke:#ffc107,color:#000
+    style PASS fill:#d4edda,stroke:#28a745,color:#000
 ```
 
 ### 6.2 Blocked Categories
@@ -441,34 +471,35 @@ text outside the JSON structure.
 
 ```mermaid
 sequenceDiagram
-    participant U as User (Browser)
-    participant FE as Next.js Frontend
-    participant BE as FastAPI Backend
-    participant GR as Guardrail Engine
-    participant LLM as OpenAI API
+    actor User as 👤 User
+    participant FE as Next.js\nFrontend
+    participant BE as FastAPI\nBackend
+    participant GR as 🛡️ Guardrail\nEngine
+    participant LLM as Gemini\nAPI
     participant DB as SQLite
 
-    U->>FE: Types message, clicks Send
-    FE->>BE: POST /api/chat {conversation_id, message}
-    BE->>DB: Create/validate conversation
-    BE->>DB: Store user message
+    User->>FE: Types message, presses Enter
+    FE->>BE: POST /api/chat {message, conversation_id?}
+    BE->>DB: Create or load conversation
+    BE->>DB: INSERT user message
     BE->>GR: check_guardrails(message)
 
-    alt Guardrail Triggered
+    alt 🚫 Guardrail Triggered
         GR-->>BE: GuardrailResult(blocked=True, category, reason)
-        BE->>DB: Store refusal as assistant message
-        BE-->>FE: {answer: refusal, claims: [], guardrail_triggered: true}
-    else Guardrail Passed
+        Note over BE: LLM is NEVER called
+        BE->>DB: INSERT refusal as assistant message
+        BE-->>FE: {answer: refusal_text, claims: [],\nguardrail_triggered: true, guardrail_reason}
+        FE-->>User: ⚠️ Refusal bubble (amber styling)
+    else ✅ Guardrail Passed
         GR-->>BE: GuardrailResult(blocked=False)
-        BE->>LLM: Chat completion (system_prompt + history + user_msg, json_schema)
-        LLM-->>BE: Structured JSON {answer, claims[{text, source: null}]}
-        BE->>BE: Validate response against Pydantic schema
-        BE->>DB: Store assistant message
-        BE->>DB: Store individual claims
-        BE-->>FE: {answer, claims, guardrail_triggered: false}
+        BE->>LLM: [system_prompt, history, user_msg]\njson_schema enforced
+        LLM-->>BE: {answer: "...", claims: [{text, source: null}, ...]}
+        BE->>BE: Pydantic validate +\nforce source=null on every claim
+        BE->>DB: INSERT assistant message
+        BE->>DB: INSERT claims[] records
+        BE-->>FE: {answer, claims[], guardrail_triggered: false}
+        FE-->>User: 💬 Answer + claim badges [1][2][3]
     end
-
-    FE->>U: Render answer + claim badges + sources panel
 ```
 
 ---
@@ -477,25 +508,40 @@ sequenceDiagram
 
 ```mermaid
 flowchart TB
-    subgraph Page["app/page.tsx"]
-        Layout["Two-Column Layout"]
+    subgraph Page["page.tsx — State Manager"]
+        State["React State\nconversations, messages,\nactiveConversationId,\nisLoading, isSourcesOpen"]
     end
 
-    subgraph Left["Left Column (Chat)"]
-        CW["ChatWindow"]
-        CW --> MB1["MessageBubble (user)"]
-        CW --> MB2["MessageBubble (assistant)"]
-        MB2 --> CB["ClaimBadge × N"]
-        IB["InputBar"]
+    subgraph Layout["Two-Column Layout"]
+        direction LR
+        
+        subgraph LeftCol["Left Column (2/3)"]
+            direction TB
+            Header_C["Header\n(title + sources toggle button)"]
+            Sidebar_C["Sidebar\n(conversation list + new chat)"]  
+            CW["ChatWindow\n(scrollable message list)"]
+            CW --> MB_U["MessageBubble\n\"user\" role"]
+            CW --> MB_A["MessageBubble\n\"assistant\" role"]
+            MB_A --> CB1["ClaimBadge [1]"]
+            MB_A --> CB2["ClaimBadge [2]"]
+            MB_A --> CBn["ClaimBadge [N]..."]
+            IB["InputBar\n(textarea + Send button)"]            
+        end
+
+        subgraph RightCol["Right Column (1/3)"]
+            direction TB
+            SP["SourcesPanel\n(slide-in drawer)"]
+            SP --> Empty["\"No sources in Milestone 1\"\nM2: verified URLs per claim"]
+        end
     end
 
-    subgraph Right["Right Column"]
-        SP["SourcesPanel"]
-        SP --> Empty["'No sources yet' placeholder (M1)"]
-    end
-
-    Page --> Left
-    Page --> Right
+    Page --> Layout
+    State -->|passes props| CW
+    State -->|passes props| IB
+    State -->|passes props| Sidebar_C
+    IB -->|"sendMessage()"| State
+    Sidebar_C -->|"selectConversation()"| State
+    Header_C -->|"toggleSources()"| State
 ```
 
 ### Component Responsibilities
@@ -608,23 +654,43 @@ class Settings(BaseSettings):
 
 ```mermaid
 flowchart LR
-    subgraph Vercel["Vercel (Frontend)"]
-        NJ["Next.js App"]
+    subgraph GitHub["📦 GitHub"]
+        Repo["Nutrition-app\nrepository (main)"]        
     end
 
-    subgraph Railway["Railway (Backend)"]
-        FA["FastAPI App"]
-        SQL["SQLite File"]
+    subgraph Vercel["☁️ Vercel"]
+        direction TB
+        VDeploy["Auto-deploy trigger"]
+        NextJS["Next.js 16 App\nNutritional Editorial UI\n(Stitch design system)"]
+        VEnv["Env: NEXT_PUBLIC_API_URL\n= Railway URL /api"]
     end
 
-    subgraph OpenAI["OpenAI"]
-        API["GPT-4o API"]
+    subgraph Railway["🚂 Railway"]
+        direction TB
+        RDeploy["Auto-deploy trigger"]
+        FastAPI["FastAPI + Uvicorn\n$PORT binding"]
+        CORS["CORS Middleware\n*.vercel.app regex"]
+        SQLiteDB[("nutrition.db\nSQLite on /app volume")]
+        REnv["Env: GEMINI_API_KEY\nCORS_ORIGINS, LLM_PROVIDER"]
     end
 
-    User -->|HTTPS| NJ
-    NJ -->|API calls| FA
-    FA -->|Structured Output| API
-    FA -->|read/write| SQL
+    subgraph GeminiCloud["🤖 Google AI Studio"]
+        GeminiAPI["Gemini 3.1 Flash\nStructured JSON Output"]
+    end
+
+    Browser(["👤 User Browser"]) -->|HTTPS| NextJS
+    NextJS -->|REST /api/chat| FastAPI
+    FastAPI -->|structured prompt| GeminiAPI
+    GeminiAPI -->|JSON response| FastAPI
+    FastAPI <-->|read/write| SQLiteDB
+
+    Repo -->|"push to main"| VDeploy
+    VDeploy -->|"npm run build"| NextJS
+    VEnv -.->|baked at build time| NextJS
+
+    Repo -->|"push to main"| RDeploy
+    RDeploy -->|"Docker build"| FastAPI
+    REnv -.->|runtime injection| FastAPI
 ```
 
 | Step | Action                                                   |
